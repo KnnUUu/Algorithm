@@ -1,3 +1,6 @@
+"""
+
+
 def partition(nums,left,right,pivot):
     pivotValue = nums[pivot]
     nums[right],nums[pivot] = nums[pivot],nums[right]
@@ -17,15 +20,41 @@ def quickSelect(nums,left,right,k):
         return quickSelect(nums,left,pivot-1,k)
     else:
         return quickSelect(nums,pivot+1,right,k)
-
+"""
 
 def quickSelect(nums,k):
-    k-=1
+    """
+    return (k+1)th smallest element in nums
+    result is same as sorted(nums)[k]
 
+    average O(N)
+    worse case O(N^2): pivot get the largest/smallest value every time
+    """
+    def part(l, r, k):
+        if l==r:
+            if l==k: return nums[l]
+            else: return -1
 
-print(quickSelect([3,2,1,5,6,4],0,5,k = 1-1))
-print(quickSelect([3,2,1,5,6,4],0,5,k = 2-1))
-print(quickSelect([3,2,1,5,6,4],0,5,k = 3-1))
-print(quickSelect([3,2,1,5,6,4],0,5,k = 4-1))
-print(quickSelect([3,2,1,5,6,4],0,5,k = 5-1))
-print(quickSelect([3,2,1,5,6,4],0,5,k = 6-1))
+        val = nums[k]
+        nums[k],nums[l] = nums[l],nums[k]
+        mark = l+1
+        for i in range(l+1,r+1):
+            if nums[i]<val:
+                nums[i],nums[mark]=nums[mark],nums[i]
+                mark+=1
+        nums[l],nums[mark-1]=nums[mark-1],nums[l]
+
+        if mark-1 > k:
+            return part(l,mark-2,k)
+        elif mark-1 < k:
+            return part(mark,r,k)
+        else:
+            return nums[k]
+
+    if not nums: return -1
+    elif k<0 or k>=len(nums): return -1
+    else: return part(0,len(nums)-1,k)
+
+testNums = [6,4,3,1,5,2]
+for i in range(len(testNums)):
+    print(quickSelect(testNums,i))
